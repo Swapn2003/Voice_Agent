@@ -123,7 +123,6 @@ function getVoiceAgentBase(): string {
   // Precedence: window override → env → hard dev default (8081) → proxy fallback
   return (
     w.__VOICE_AGENT_BASE__ ||
-    (typeof process !== 'undefined' && (process as any).env && (process as any).env.REACT_APP_VOICE_AGENT_BASE) ||
     'http://localhost:8081/voice-agent' ||
     '/voice-agent'
   );
