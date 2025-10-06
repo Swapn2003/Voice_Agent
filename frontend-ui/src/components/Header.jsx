@@ -16,23 +16,9 @@ const Header = () => {
               to="/" 
               className={`nav-tab ${location.pathname === '/' ? 'active' : ''}`}
             >
-              Alerts
-            </Link>
-            <Link 
-              to="/cases" 
-              className={`nav-tab ${location.pathname.includes('/cases') ? 'active' : ''}`}
-            >
               Cases
             </Link>
           </nav>
-        </div>
-        <div className="header-right">
-          <div className="user-avatar">
-            <div className="avatar-circle">
-              <span className="avatar-text">MC</span>
-            </div>
-            <span className="user-name">MCCANALYST</span>
-          </div>
         </div>
       </div>
     </header>

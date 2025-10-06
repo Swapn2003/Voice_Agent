@@ -183,26 +183,6 @@ const CaseTable = ({
         </div>
       </div>
 
-      <div className="sub-nav">
-        <button 
-          className={`sub-nav-tab ${filters.subProgram === 'RECOVERY' ? 'active' : ''}`}
-          onClick={() => setFilters({...filters, subProgram: 'RECOVERY'})}
-        >
-          Recovery
-        </button>
-        <button 
-          className={`sub-nav-tab ${filters.subProgram === 'PROACTIVE' ? 'active' : ''}`}
-          onClick={() => setFilters({...filters, subProgram: 'PROACTIVE'})}
-        >
-          Proactive
-        </button>
-        <button 
-          className={`sub-nav-tab ${filters.subProgram === 'REACTIVE' ? 'active' : ''}`}
-          onClick={() => setFilters({...filters, subProgram: 'REACTIVE'})}
-        >
-          Reactive
-        </button>
-      </div>
 
       <FilterBar 
         filters={filters}
@@ -224,7 +204,7 @@ const CaseTable = ({
                 />
               </th>
               <th>Case ID <span className="column-icon">⋮</span></th>
-              <th>Merchants <span className="column-icon">⋮</span></th>
+              {/* <th>Merchants <span className="column-icon">⋮</span></th> */}
               <th>Acquirer Primary ICA <span className="column-icon">⋮</span></th>
               <th>Acquirer Country <span className="column-icon">⋮</span></th>
               <th>Acquirer Company Name (CID) <span className="column-icon">⋮</span></th>
@@ -254,11 +234,11 @@ const CaseTable = ({
                     {caseItem.caseId}
                   </Link>
                 </td>
-                <td>
+                {/* <td>
                   <button className="view-merchants-btn" onClick={() => onCaseSelect(caseItem.caseId)}>
                     View
                   </button>
-                </td>
+                </td> */}
                 <td>{caseItem.acquirerPrimaryIca || 'N/A'}</td>
                 <td>{caseItem.acquirerCountry || 'N/A'}</td>
                 <td className="company-name">{caseItem.bank}</td>

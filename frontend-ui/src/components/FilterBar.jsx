@@ -98,33 +98,9 @@ const FilterBar = ({ filters, setFilters, onExport, onAssign, onBatchActions }) 
           )}
         </div>
 
-        <div className="action-dropdowns">
-          <button className="action-button">Columns <span className="dropdown-arrow">▼</span></button>
-          <button className="action-button" onClick={onExport}>Export <span className="dropdown-arrow">▼</span></button>
-          <button className="action-button" onClick={onAssign}>Assign <span className="dropdown-arrow">▼</span></button>
-          <button className="action-button" onClick={onBatchActions}>Batch Actions <span className="dropdown-arrow">▼</span></button>
-          <button className="action-button">Custom Views <span className="dropdown-arrow">▼</span></button>
-        </div>
-
-        <div className="select-all">
-          <input type="checkbox" id="select-all" />
-          <label htmlFor="select-all">Select All</label>
-        </div>
       </div>
 
-      <div className="filter-right">
-        <div className="view-toggle">
-          <span className="view-label">Current View:</span>
-          <div className="toggle-switch">
-            <button className={`toggle-btn ${filters.view === 'customer' ? 'active' : ''}`}>
-              Customer
-            </button>
-            <button className={`toggle-btn ${filters.view === 'merchant' ? 'active' : ''}`}>
-              Merchant
-            </button>
-          </div>
-        </div>
-      </div>
+    
     </div>
   );
 };

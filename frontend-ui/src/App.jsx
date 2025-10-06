@@ -98,7 +98,6 @@ function App() {
   return (
     <Router>
       <div className="App">
-        <DemoModeBanner />
         <Header />
         
         <Routes>
