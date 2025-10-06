@@ -55,6 +55,16 @@ export class CaseService {
       throw new Error('Failed to fetch cases');
     }
   }
+
+  static async searchCases(searchBody) {
+    try {
+      const response = await apiClient.post(`/cases/searches`, searchBody);
+      return response.data;
+    } catch (error) {
+      console.error('Error searching cases:', error);
+      throw new Error('Failed to search cases');
+    }
+  }
   
   static async getCase(caseId) {
     try {

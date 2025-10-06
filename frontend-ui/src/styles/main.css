@@ -509,31 +509,31 @@ body {
 .status-badge.open {
   background-color: transparent;
   color: #333333;
-  border: 1px solid #dee2e6;
+  border: none;
 }
 
 .status-badge.pending {
   background-color: transparent;
   color: #333333;
-  border: 1px solid #dee2e6;
+  border: none;
 }
 
 .status-badge.assessment {
   background-color: transparent;
   color: #333333;
-  border: 1px solid #dee2e6;
+  border: none;
 }
 
 .status-badge.hold {
   background-color: transparent;
   color: #333333;
-  border: 1px solid #dee2e6;
+  border: none;
 }
 
 .status-badge.closed {
   background-color: transparent;
   color: #333333;
-  border: 1px solid #dee2e6;
+  border: none;
 }
 
 .fine-amount {

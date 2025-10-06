@@ -53,6 +53,22 @@ public class CaseController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    // New search endpoint to handle complex filter criteria
+    @PostMapping("/searches")
+    public ResponseEntity<List<CaseDto>> searchCases(@RequestBody Map<String, Object> searchBody) {
+        try {
+            // Expected body fields: pageLength, pageOffset, sortField, exportFlag, caseType, criteria[]
+            // For demo, we only use criteria
+            List<Map<String, String>> criteria = (List<Map<String, String>>) searchBody.getOrDefault("criteria", List.of());
+            List<CaseDto> cases = caseService.searchCasesByCriteria(criteria);
+            logger.info("Searched cases with {} criteria, found {} results", criteria.size(), cases.size());
+            return ResponseEntity.ok(cases);
+        } catch (Exception e) {
+            logger.error("Error searching cases", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
     
     @GetMapping("/{caseId}")
     public ResponseEntity<CaseDto> getCase(@PathVariable String caseId) {

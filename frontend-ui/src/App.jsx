@@ -1,4 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { Provider, useDispatch, useSelector } from 'react-redux';
+import store from './store/store';
+import { setCriteria } from './store/filtersSlice';
+import { listFilterThunk } from './store/casesSlice';
 import { VoiceAgent } from 'voice-agent-lib';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
@@ -20,33 +24,42 @@ const DemoModeBanner = () => (
   </div>
 );
 
-function App() {
-  const [cases, setCases] = useState([]);
+function AppInner() {
+  const dispatch = useDispatch();
+  const cases = useSelector((s) => s.cases.items);
+  const loading = useSelector((s) => s.cases.loading);
+  const criteria = useSelector((s) => s.filters.criteria);
   const [selectedCase, setSelectedCase] = useState(null);
   const [showCaseDetails, setShowCaseDetails] = useState(false);
-  const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState({});
 
-
   useEffect(() => {
-    loadCases();
-  }, [filters]);
+    dispatch(listFilterThunk());
+  }, [dispatch]);
 
-  const loadCases = async () => {
-    try {
-      setLoading(true);
-      const casesData = await CaseService.getCases(filters);
-      setCases(casesData);
-    } catch (error) {
-      console.error('Error loading cases:', error);
-    } finally {
-      setLoading(false);
+  // React to UI filter changes by mapping to backend-supported criteria and fetching
+  useEffect(() => {
+    const newCriteria = [];
+    if (filters.status) {
+      newCriteria.push({ field: 'CASESTATUS', operator: 'EQUAL_TO', value: filters.status });
     }
-  };
+    if (filters.owner) {
+      newCriteria.push({ field: 'ASSIGNTONAME', operator: 'CONTAINS', value: filters.owner });
+    }
+    if (filters.bank) {
+      newCriteria.push({ field: 'COMPLAINANTCOMPANYNAME', operator: 'CONTAINS', value: filters.bank });
+    }
+    // Note: dateFrom/dateTo and type are not supported by backend search in this demo
 
-  const refreshCases = () => {
-    loadCases();
-  };
+    dispatch(setCriteria(newCriteria));
+  }, [dispatch, filters]);
+
+  // React to Redux criteria changes (e.g., from VoiceAgent) by fetching cases
+  useEffect(() => {
+    dispatch(listFilterThunk());
+  }, [dispatch, criteria]);
+
+  const refreshCases = () => { dispatch(listFilterThunk()); };
 
   const handleCaseSelect = async (caseId) => {
     try {
@@ -61,7 +74,8 @@ function App() {
   const handleCaseUpdate = async (caseId, updatedData) => {
     try {
       const updatedCase = await CaseService.updateCase(caseId, updatedData);
-      setCases(cases.map(c => c.id === updatedCase.id ? updatedCase : c));
+      // Refresh cases list via thunk to keep Redux state consistent
+      dispatch(listFilterThunk());
       if (selectedCase && selectedCase.id === updatedCase.id) {
         setSelectedCase(updatedCase);
       }
@@ -137,9 +151,17 @@ function App() {
             onClose={() => setShowCaseDetails(false)}
           />
         )}
-        <VoiceAgent appId="demoApp" />
+        <VoiceAgent appId="demoApp" store={store} />
       </div>
     </Router>
+  );
+}
+
+function App() {
+  return (
+    <Provider store={store}>
+      <AppInner />
+    </Provider>
   );
 }
 

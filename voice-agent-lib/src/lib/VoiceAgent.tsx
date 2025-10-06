@@ -1,13 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { useVoiceCore } from './core/voiceCore';
+import { setHostStore } from './core/ui/uiController';
 import { resumeTTSIfNeeded } from './speech/speech';
 
-export type VoiceAgentProps = { appId: string };
+export type VoiceAgentProps = { appId: string; store?: any };
 
-export const VoiceAgent: React.FC<VoiceAgentProps> = ({ appId }: VoiceAgentProps) => {
+export const VoiceAgent: React.FC<VoiceAgentProps> = ({ appId, store }: VoiceAgentProps) => {
   const { state, startListening, stopListening, speak, loadContext } = useVoiceCore(appId);
   React.useEffect(() => { loadContext(); }, [loadContext]);
+  React.useEffect(() => { setHostStore(store || null); return () => setHostStore(null); }, [store]);
   const shadowRoot = React.useMemo(() => ensureShadowHost(), []);
   const button = (
     <>

@@ -17,6 +17,7 @@ import java.io.InputStreamReader;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -45,6 +46,34 @@ public class CaseService {
         return caseRepository.findByFilters(status, type, owner, bank, dateFrom, dateTo).stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
+    }
+
+    // New: search by criteria list similar to searchCriteriaDTO
+    public List<CaseDto> searchCasesByCriteria(List<Map<String, String>> criteria) {
+        List<CaseDto> all = getAllCases();
+        for (Map<String, String> c : criteria) {
+            String field = c.getOrDefault("field", "");
+            String operator = c.getOrDefault("operator", "CONTAINS");
+            String value = c.getOrDefault("value", "");
+            all = all.stream().filter(dto -> matches(dto, field, operator, value)).collect(Collectors.toList());
+        }
+        return all;
+    }
+
+    private boolean matches(CaseDto dto, String field, String operator, String value) {
+        String target = switch (field) {
+            case "CASEID" -> dto.getCaseId();
+            case "CASESTATUS" -> dto.getStatus() != null ? dto.getStatus().name() : null;
+            case "ASSIGNTONAME" -> dto.getOwner();
+            case "COMPLAINANTCOMPANYNAME" -> dto.getBank();
+            default -> "";
+        };
+        if (target == null) target = "";
+        return switch (operator) {
+            case "EQUAL_TO" -> target.equalsIgnoreCase(value);
+            case "NOT_CONTAINS" -> !target.toLowerCase().contains(value.toLowerCase());
+            default -> target.toLowerCase().contains(value.toLowerCase());
+        };
     }
     
     public Optional<CaseDto> getCaseById(String caseId) {
